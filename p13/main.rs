@@ -2,14 +2,16 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::{self, BufRead, BufReader};
 
+use rayon::prelude::*;
+
 fn main() -> io::Result<()> {
-    let results: Vec<String> = parse_input("testInput.txt")
+    let results: Vec<String> = parse_input("submitInput.txt")
         .unwrap()
-        .iter()
+        .par_iter()
         .map(|x| process(*x))
         .collect();
 
-    let mut file = File::create("testOutput.txt")?;
+    let mut file = File::create("submitOutput.txt")?;
     for (case, result) in results.iter().enumerate() {
         file.write_all(format!("Case #{}: {}\n", case + 1, result).as_bytes())?;
     }
@@ -21,28 +23,22 @@ fn process(input: u64) -> String {
         return String::from("IMPOSSIBLE");
     }
 
-    let mut low = 0;
-    let mut high = num::integer::sqrt(input) * 2;
-    let mut mid = 0;
-    while low <= high {
-        mid = (low + high) / 2;
-        match tower(mid, 1) {
+    let mut height = 0;
+    let mut incr = 1000000;
+    while incr > 0 {
+        match tower(height + incr, 1) {
             n if n > input => {
-                high = mid - 1;
+                incr /= 2;
             }
-            n if n < input => {
-                low = mid + 1;
+            _ => {
+                height += incr;
             }
-            n => return format!("{} {}", mid, n),
         }
-    }
-    while tower(mid, 1) > input {
-        mid -= 1;
     }
 
     for i in 2.. {
-        if tower(mid, i) > input {
-            return format!("{} {}", mid, tower(mid, i - 1));
+        if tower(height, i) > input {
+            return format!("{} {}", height, tower(height, i - 1));
         }
     }
     String::from("Error")
