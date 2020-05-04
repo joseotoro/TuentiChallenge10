@@ -1,0 +1,2 @@
+XOR cipher. Cyberchef recipe:
+https://gchq.github.io/CyberChef/#recipe=XOR(%7B'option':'Hex','string':'3633363A33353B393038383C363236333635313A353336'%7D,'Standard',false)XOR(%7B'option':'Hex','string':'3A3A333A333137393D39313C3C3634333431353A37363D'%7D,'Standard',false)&input=NTE0OzI0ODs5ODA7MzQ3OzE0NTszMzI
